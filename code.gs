@@ -17,17 +17,34 @@ function onOpen(){
 function sendEmail(){
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var s = ss.getSheetByName("missingDates");
-  var dataRange = s.getRange(2,5,25,1).getValues();
-  // Logger.log(dataRange[0]);
-  for(var i in dataRange){
-    var row = dataRange[i];
-    var emailAddress = row[0];
-    var message = 'please submit EOD forms for the following days:\n' + dataRange;
-    var subject = 'Missing EOD dates for ' + emailAddress;
-    MailApp.sendEmail(emailAddress,subject,message);
-  }
-
+  var values = s.getRange(2,5,70,1).getValues();
+  var message = composeMessage(values);
+  var messageHTML = composeHtmlMsg(values);
+  //Logger.log(messageHTML);
+  
+  var emailAddress = values[0][0];
+  var subject = 'Missing EOD dates for ' + emailAddress;
+  MailApp.sendEmail(emailAddress,subject,message);
 }
+
+function composeMessage(values){
+  var message = 'please submit EOD forms for the following dates: \n'
+  for(var c=0;c<values.length;++c){
+    message+='\n'+values[c]
+  }
+  Logger.log(message);
+  return message;
+}
+
+function composeHtmlMsg(values){
+  var message = 'please submit dates:<br><br><table style="background-color:lightblue;border-collapse:collapse;" border = 1 cellpadding = 5><th>data</th><th>Values</th><tr>'
+  for(var c=0;c<values.length;++c){
+    message+='</td><td>'+values[c]+'</td></tr>'
+  }
+  return message+'</table>';
+}
+
+
 
 function returnMissingLdap(){
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -140,6 +157,10 @@ function addPivotTable(){
       };
       Sheets.Spreadsheets.batchUpdate({'requests': requests}, ss.getId());
       }
+
+
+
+
 
 
 
