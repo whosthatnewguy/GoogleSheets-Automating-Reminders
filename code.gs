@@ -3,12 +3,12 @@
  * dates as rows and ID keys as columns
  * 
  * adjust dates to iterate through by changing the ranges
- * at lines 37-41 / 63-68 
+ * at lines 54...57 / 80...84 
  */
 function onOpen(){
   var app = SpreadsheetApp.getUi();
   app.createMenu('QuickPivots')
-  .addItem('Create', 'addPivotTable')
+  .addItem('Create PivotTable', 'addPivotTable')
   .addItem('Return Missing Days','returnMissingLdap')
   .addItem('Send Email', 'sendEmail')
   .addToUi();
@@ -32,7 +32,7 @@ function composeMessage(values){
   for(var c=0;c<values.length;++c){
     message+='\n'+values[c]
   }
-  Logger.log(message);
+  //Logger.log(message);
   return message;
 }
 
@@ -48,14 +48,14 @@ function composeHtmlMsg(values){
 
 function returnMissingLdap(){
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var s = ss.getSheetByName("Sheet34");
+  var s = ss.getSheetByName("timePivot");
   var s1 = ss.getSheetByName("missingDates");
 
   //march2020
-  // var dateRange = s.getRange(296,1,17,47).getValues();
+  var dateRange = s.getRange(296,1,17,47).getValues();
 
   //august2019
-  var dateRange = s.getRange(165,1,s.getLastRow(),47).getValues();
+  // var dateRange = s.getRange(165,1,s.getLastRow(),47).getValues();
   var ldapIndex;
   var arrayIndex;
 
@@ -79,10 +79,10 @@ function returnMissingLdap(){
 
         //return assoc. dates for range
         //march2020 
-        // var dateList = s.getRange(296,1,17,1).getValues();
+        var dateList = s.getRange(296,1,17,1).getValues();
 
         //august2019
-        var dateList = s.getRange(165,1,s.getLastRow(),1).getValues();
+        // var dateList = s.getRange(165,1,s.getLastRow(),1).getValues();
         var missingDate = dateList[i];
         emptyDates.push([missingDate])
 
@@ -157,10 +157,3 @@ function addPivotTable(){
       };
       Sheets.Spreadsheets.batchUpdate({'requests': requests}, ss.getId());
       }
-
-
-
-
-
-
-
